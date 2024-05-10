@@ -1,0 +1,5 @@
+Django>=3.2
+djangorestframework
+psycopg2-binary  # PostgreSQL adapter for Python
+django-timescale  # For integrating Django with TimescaleDB
+pysnmp  # SNMP library
