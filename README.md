@@ -6,6 +6,11 @@ npm install -g create-react-app
 ```
 npm install reactstrap react react-dom
 ```
+
+```
+npm install --save @chakra-ui/react
+```
+
 2. Create a new React app named "network-monitoring-frontend"
 ```
 create-react-app network-monitoring-frontend
