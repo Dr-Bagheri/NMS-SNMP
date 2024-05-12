@@ -4,7 +4,7 @@ Setting Up the Environment and implementation
 npm install -g create-react-app
 ```
 ```
-npm install reactstrap react react-dom
+npm install axios
 ```
 
 ```
