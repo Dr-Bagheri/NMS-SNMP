@@ -53,39 +53,41 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Dashboard() {
-	const [latestEntries, setLatestEntries] = useState([]);
-    const [showAbout, setShowAbout] = useState(false);
+    const [snmpData, setSnmpData] = useState({
+		device_name: '',
+		cpu_usage: 0,
+		ram_usage: 0,
+		timestamp: ''
+	});
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/api/data/');
-                const entries = response.data;
-                const latestPerDevice = getLatestEntryPerDevice(entries);
-                setLatestEntries(Object.values(latestPerDevice));
-            } catch (error) {
-                console.log("Error fetching data:", error);
-            }
+        // Update the wsUrl to match your Django server's WebSocket route
+        const wsUrl = 'ws://localhost:8000/ws/snmp/';
+        const ws = new WebSocket(wsUrl);
+
+        ws.onopen = () => {
+            console.log("WebSocket connection established.");
         };
 
-        fetchData();
-    }, []);
+        ws.onmessage = (event) => {
+			const receivedData = JSON.parse(event.data);
+  
+			// Updating state with the SNMP data
+			setSnmpData(receivedData.message);
+		};
 
-    const getLatestEntryPerDevice = (entries) => {
-        const latestByDevice = {};
-        entries.forEach(entry => {
-            const deviceId = entry.deviceId;
-            if (!latestByDevice[deviceId] || latestByDevice[deviceId].timestamp < entry.timestamp) {
-                latestByDevice[deviceId] = entry;
-            }
-        });
-        return latestByDevice;
-    };
+        // Cleanup function to close WebSocket connection when the component unmounts
+        return () => {
+            ws.close();
+        };
+    }, []);
+	
 	return (
 		<Flex flexDirection='column' pt={{ base: '120px', md: '75px' }}>
 			<SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing='24px'>
-				{/* MiniStatistics Card */}
+				
 				<Card>
+				
 					<CardBody>
 						<Flex flexDirection='row' align='center' justify='center' w='100%'>
 							<Stat me='auto'>
@@ -94,7 +96,7 @@ function Dashboard() {
 								</StatLabel>
 								<Flex>
 									<StatNumber fontSize='lg' color='#fff'>
-										$53,000
+										$35.500
 									</StatNumber>
 									<StatHelpText
 										alignSelf='flex-end'
@@ -262,121 +264,116 @@ function Dashboard() {
 						</Flex>
 					</CardBody>
 				</Card>
-				{latestEntries.map((entry, index) => (
-				
-					<Card gridArea={{ md: '2 / 1 / 3 / 2', '2xl': 'auto' }}>
-						<CardHeader mb='24px'>
-							<Flex direction='column'>
-								<Text color='#fff' fontSize='lg' fontWeight='bold' mb='4px'>
-									Performance
+				<Card gridArea={{ md: '2 / 1 / 3 / 2', '2xl': 'auto' }}>
+					<CardHeader mb='24px'>
+						<Flex direction='column'>
+							<Text color='#fff' fontSize='lg' fontWeight='bold' mb='4px'>
+								Performance
+							</Text>
+							<Text color='gray.400' fontSize='sm'>
+								Ram Usage
+							</Text>
+						</Flex>
+					</CardHeader>
+					<Flex direction='column' justify='center' align='center'>
+						<Box zIndex='-1'>
+							<CircularProgress
+								size={200}
+								value={snmpData.ram_usage}
+								thickness={6}
+								color='#582CFF'
+								variant='vision'
+								rounded>
+								<CircularProgressLabel>
+									<IconBox mb='20px' mx='auto' bg='brand.200' borderRadius='50%' w='48px' h='48px'>
+									
+									</IconBox>
+								</CircularProgressLabel>
+							</CircularProgress>
+						</Box>
+						<Stack
+							direction='row'
+							spacing={{ sm: '42px', md: '68px' }}
+							justify='center'
+							maxW={{ sm: '270px', md: '300px', lg: '100%' }}
+							mx={{ sm: 'auto', md: '0px' }}
+							p='18px 22px'
+							bg='linear-gradient(126.97deg, rgb(6, 11, 40) 28.26%, rgba(10, 14, 35) 91.2%)'
+							borderRadius='20px'
+							position='absolute'
+							bottom='5%'>
+							<Text fontSize='xs' color='gray.400'>
+								0%
+							</Text>
+							<Flex direction='column' align='center' minW='80px'>
+								<Text color='#fff' fontSize='28px' fontWeight='bold'>
+									{snmpData.ram_usage}%
 								</Text>
-								<Text color='gray.400' fontSize='sm'>
-									Ram Usage
+								<Text fontSize='xs' color='gray.400'>
+									Based on SNMP data
 								</Text>
 							</Flex>
-						</CardHeader>
-						<Flex direction='column' justify='center' align='center'>
-							<Box zIndex='-1'>
-								<CircularProgress
-									size={200}
-									value={entry.ram_usage}
-									thickness={6}
-									color='#582CFF'
-									variant='vision'
-									rounded>
-									<CircularProgressLabel>
-										<IconBox mb='20px' mx='auto' bg='brand.200' borderRadius='50%' w='48px' h='48px'>
-										
-										</IconBox>
-									</CircularProgressLabel>
-								</CircularProgress>
-							</Box>
-							<Stack
-								direction='row'
-								spacing={{ sm: '42px', md: '68px' }}
-								justify='center'
-								maxW={{ sm: '270px', md: '300px', lg: '100%' }}
-								mx={{ sm: 'auto', md: '0px' }}
-								p='18px 22px'
-								bg='linear-gradient(126.97deg, rgb(6, 11, 40) 28.26%, rgba(10, 14, 35) 91.2%)'
-								borderRadius='20px'
-								position='absolute'
-								bottom='5%'>
-								<Text fontSize='xs' color='gray.400'>
-									0%
-								</Text>
-								<Flex direction='column' align='center' minW='80px'>
-									<Text color='#fff' fontSize='28px' fontWeight='bold'>
-										{entry.ram_usage}%
-									</Text>
-									<Text fontSize='xs' color='gray.400'>
-										Based on SNMP data
-									</Text>
-								</Flex>
-								<Text fontSize='xs' color='gray.400'>
-									100%
-								</Text>
-							</Stack>
+							<Text fontSize='xs' color='gray.400'>
+								100%
+							</Text>
+						</Stack>
+					</Flex>
+				</Card>
+				<Card gridArea={{ md: '2 / 2 / 3 / 2', '2xl': 'auto' }}>
+					<CardHeader mb='24px'>
+						<Flex direction='column'>
+							<Text color='#fff' fontSize='lg' fontWeight='bold' mb='4px'>
+								Performance
+							</Text>
+							<Text color='gray.400' fontSize='sm'>
+								Cpu Usage
+							</Text>
 						</Flex>
-					</Card>
-				))}
-				{latestEntries.map((entry, index) => (
-					<Card gridArea={{ md: '2 / 2 / 3 / 2', '2xl': 'auto' }}>
-						<CardHeader mb='24px'>
-							<Flex direction='column'>
-								<Text color='#fff' fontSize='lg' fontWeight='bold' mb='4px'>
-									Performance
+					</CardHeader>
+					<Flex direction='column' justify='center' align='center'>
+						<Box zIndex='-1'>
+							<CircularProgress
+								size={200}
+								value={snmpData.cpu_usage}
+								thickness={6}
+								color='#582CFF'
+								variant='vision'
+								rounded>
+								<CircularProgressLabel>
+									<IconBox mb='20px' mx='auto' bg='brand.200' borderRadius='50%' w='48px' h='48px'>
+									
+									</IconBox>
+								</CircularProgressLabel>
+							</CircularProgress>
+						</Box>
+						<Stack
+							direction='row'
+							spacing={{ sm: '42px', md: '68px' }}
+							justify='center'
+							maxW={{ sm: '270px', md: '300px', lg: '100%' }}
+							mx={{ sm: 'auto', md: '0px' }}
+							p='18px 22px'
+							bg='linear-gradient(126.97deg, rgb(6, 11, 40) 28.26%, rgba(10, 14, 35) 91.2%)'
+							borderRadius='20px'
+							position='absolute'
+							bottom='5%'>
+							<Text fontSize='xs' color='gray.400'>
+								0%
+							</Text>
+							<Flex direction='column' align='center' minW='80px'>
+								<Text color='#fff' fontSize='28px' fontWeight='bold'>
+							 	{snmpData.cpu_usage}%
 								</Text>
-								<Text color='gray.400' fontSize='sm'>
-									Cpu Usage
+								<Text fontSize='xs' color='gray.400'>
+									Based on SNMP data
 								</Text>
 							</Flex>
-						</CardHeader>
-						<Flex direction='column' justify='center' align='center'>
-							<Box zIndex='-1'>
-								<CircularProgress
-									size={200}
-									value={entry.cpu_usage}
-									thickness={6}
-									color='#582CFF'
-									variant='vision'
-									rounded>
-									<CircularProgressLabel>
-										<IconBox mb='20px' mx='auto' bg='brand.200' borderRadius='50%' w='48px' h='48px'>
-										
-										</IconBox>
-									</CircularProgressLabel>
-								</CircularProgress>
-							</Box>
-							<Stack
-								direction='row'
-								spacing={{ sm: '42px', md: '68px' }}
-								justify='center'
-								maxW={{ sm: '270px', md: '300px', lg: '100%' }}
-								mx={{ sm: 'auto', md: '0px' }}
-								p='18px 22px'
-								bg='linear-gradient(126.97deg, rgb(6, 11, 40) 28.26%, rgba(10, 14, 35) 91.2%)'
-								borderRadius='20px'
-								position='absolute'
-								bottom='5%'>
-								<Text fontSize='xs' color='gray.400'>
-									0%
-								</Text>
-								<Flex direction='column' align='center' minW='80px'>
-									<Text color='#fff' fontSize='28px' fontWeight='bold'>
-								 	{entry.cpu_usage}%
-									</Text>
-									<Text fontSize='xs' color='gray.400'>
-										Based on SNMP data
-									</Text>
-								</Flex>
-								<Text fontSize='xs' color='gray.400'>
-									100%
-								</Text>
-							</Stack>
-						</Flex>
-					</Card>
-				))}
+							<Text fontSize='xs' color='gray.400'>
+								100%
+							</Text>
+						</Stack>
+					</Flex>
+				</Card>
 			</Grid>
 			
 			<Grid templateColumns={{ sm: '1fr', md: '1fr 1fr', lg: '2fr 1fr' }} gap='24px'>

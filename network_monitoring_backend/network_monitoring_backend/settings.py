@@ -20,10 +20,14 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'daphne',
     'django.contrib.staticfiles',
     'network_data',
     'corsheaders',
     'rest_framework',
+    'channels',
+    'sslserver',
+    
 ]
 
 MIDDLEWARE = [
@@ -56,6 +60,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'network_monitoring_backend.wsgi.application'
+
+ASGI_APPLICATION = 'network_monitoring_backend.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',

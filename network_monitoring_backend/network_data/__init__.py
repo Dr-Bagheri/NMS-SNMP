@@ -1,0 +1,1 @@
+default_app_config = 'network_data.apps.network_dataConfig'
