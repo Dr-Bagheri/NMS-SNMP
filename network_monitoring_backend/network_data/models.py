@@ -1,5 +1,5 @@
 from django.db import models
-from timescale.db.models.fields import TimescaleDateTimeField
+
 
 class DeviceData(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)  # Automatically set the timestamp on record creation
