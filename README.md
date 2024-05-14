@@ -60,8 +60,5 @@ docker run -d --name timescale -p 5432:5432 -e POSTGRES_PASSWORD=password timesc
 psql -U postgres -d postgres
 ```
 ```
-create_hypertable('cpu_usage', 'time')
-```
-```
-create_hypertable('ram_usage', 'time')
+create_hypertable('app_devicedata', 'timestamp');
 ```
