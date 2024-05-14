@@ -43,11 +43,22 @@ python manage.py startapp api
 ```
 python manage.py runserver
 ```
-10. TimescaleDB Setup , You need to have Docker installed for running TimescaleDB.
+10. Install PostgreSQL first and config it . (default user = postgres database = postgres)
+```
+pip install psycopg2
+```
+11. TimescaleDB Setup , You need to have Docker installed for running TimescaleDB.
 ```
 docker pull timescale/timescaledb:latest-pg12
 ```
-11. Run a TimescaleDB instance
+12. Run a TimescaleDB instance
 ```
 docker run -d --name timescale -p 5432:5432 -e POSTGRES_PASSWORD=password timescale/timescaledb:latest-pg12
+```
+13. make hypertable for usuing TimescaleDB (use this command in psql shell)
+```
+psql -U postgres -d postgres
+```
+```
+create_hypertable('app_devicedata', 'timestamp');
 ```
