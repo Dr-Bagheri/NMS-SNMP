@@ -64,39 +64,48 @@ export const dashboardTableData = [
 export const timelineData = [
   {
     logo: FaBell,
-    title: "$2400, Design changes",
-    date: "22 DEC 7:20 PM",
+    title: "We have two sets of data a mock data that we generate and a snmp data that the app will collect. we trained the AI on a mock data so we can find anomaly in the data that we have in this case RAM and CPU usage. ",
+    date: "",
     color: "brand.200",
   },
   {
-    logo: FaHtml5,
-    title: "New order #4219423",
-    date: "21 DEC 11:21 PM",
-    color: "orange",
-  },
-  {
-    logo: FaShoppingCart,
-    title: "Server Payments for April",
-    date: "21 DEC 9:28 PM",
+    logo: FaBell,
+    title: "Our mock data for training have 130000 data that we made up and from this data 100000 is clean data without anomaly and 30000 of it with anomaly and we train them with labels and get 91% accuracy out of it.",
+    date: "",
     color: "blue.400",
   },
   {
-    logo: FaCreditCard,
-    title: "New card added for order #3210145",
-    date: "20 DEC 3:52 PM",
+    logo: FaBell,
+    title: "After we train our model we make use of it in our backend and connect it to the websocket so we can have realtime data like cpu and ram usuage , just first the ram and cpu usage will be made and base on them the model will predict if they have anomaly or not",
+    date: "",
     color: "orange.300",
   },
   {
-    logo: SiDropbox,
-    title: "Unlock packages for Development",
-    date: "19 DEC 11:35 PM",
-    color: "purple",
+    logo: FaBell,
+    title: "The anomaly in the data is made of three different anomaly that it get trained on ",
+    date: "",
+    color: "orange",
   },
   {
-    logo: AdobexdLogo,
-    title: "New order #9851258",
-    date: "18 DEC 4:41 PM",
+    logo: InvisionLogo,
+    title: "1 - ram usage more than 90% and cpu usage less than 20%",
+    date: "",
+    color: "blue.400",
   },
+  {
+    logo: InvisionLogo,
+    title: "2 - cpu usage more than 90% and ram usage less than 20%",
+    date: "",
+    color: "blue.400",
+  },
+  {
+    logo: InvisionLogo,
+    title: "3 - ram usage more than 90% and cpu usage more than 90%",
+    date: "",
+    color: "blue.400",
+  },
+
+
 ];
 export const rtlDashboardTableData = [
   {

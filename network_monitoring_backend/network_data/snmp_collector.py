@@ -5,6 +5,12 @@ from pysnmp.hlapi import *
 import time
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from keras.models import load_model
+import joblib
+
+
+model = load_model('anomaly_detection_nn_model.h5')
+scaler = joblib.load('scaler.pkl')
 
 def send_to_ws(data):
     channel_layer = get_channel_layer()
@@ -17,11 +23,11 @@ def fetch_snmp_data(target_ip, oid, test_mode=True):
         # Mocking different response...
 
         if "cpu" in oid:
-            simulated_value = round(random.uniform(5, 45), 2)
+            simulated_value = round(random.uniform(5, 99), 2)
             #print(f"Simulated CPU usage: {simulated_value}")
             return simulated_value
         elif "ram" in oid:
-            simulated_value = round(random.uniform(30, 65), 2)
+            simulated_value = round(random.uniform(5, 99), 2)
             #print(f"Simulated RAM usage: {simulated_value}")
             return simulated_value
         else:
@@ -68,14 +74,21 @@ def collect_snmp_data():
     
     else:
         timestamp = datetime.now().isoformat()
+        # Normalize the input
+        input_data = scaler.transform([[cpu_usage, ram_usage]])
+        # Predict anomaly
+        prediction = model.predict(input_data)
+        is_anomaly = 1 if prediction > 0.5 else 0
+        
         
         data = {
             "device_name": "Device1" if test_mode else device_ip,
             "cpu_usage": cpu_usage,
             "ram_usage": ram_usage,
-            "timestamp": timestamp,  
+            "timestamp": timestamp, 
+            "anomaly": is_anomaly,            
         }
-        
+
 
         url = 'http://localhost:8000/api/data/'
         response = requests.post(url, json=data)  # Sending as JSON
@@ -83,7 +96,8 @@ def collect_snmp_data():
             "device_name": "Device1" if test_mode else device_ip,
             "cpu_usage": cpu_usage,
             "ram_usage": ram_usage,
-            "timestamp": timestamp,  
+            "timestamp": timestamp,
+            "anomaly": is_anomaly,            
         })
         
         if response.status_code == 201:

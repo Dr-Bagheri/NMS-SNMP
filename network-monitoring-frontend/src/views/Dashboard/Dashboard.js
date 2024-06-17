@@ -57,7 +57,8 @@ function Dashboard() {
 		device_name: '',
 		cpu_usage: 0,
 		ram_usage: 0,
-		timestamp: ''
+		timestamp: '',
+	    anomaly: 0,
 	});
 
     useEffect(() => {
@@ -84,7 +85,7 @@ function Dashboard() {
 	
 	return (
 		<Flex flexDirection='column' pt={{ base: '120px', md: '75px' }}>
-			<SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing='24px'>
+			<SimpleGrid spacing='24px'>
 				
 				<Card>
 				
@@ -92,22 +93,35 @@ function Dashboard() {
 						<Flex flexDirection='row' align='center' justify='center' w='100%'>
 							<Stat me='auto'>
 								<StatLabel fontSize='sm' color='gray.400' fontWeight='bold' pb='2px'>
-									Today's Money
+									Anamoly Detection by AI
 								</StatLabel>
 								<Flex>
-									<StatNumber fontSize='lg' color='#fff'>
-										$35.500
-									</StatNumber>
+									
+									{snmpData.anomaly === 0 ? (	
 									<StatHelpText
 										alignSelf='flex-end'
 										justifySelf='flex-end'
 										m='0px'
 										color='green.400'
+										fontSize='30px'
 										fontWeight='bold'
-										ps='3px'
 										fontSize='md'>
-										+55%
+										NO Anomaly Detected &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM Usage : {snmpData.ram_usage}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            CPU Usage : {snmpData.cpu_usage}
+									</StatHelpText> 
+                                    ) : (
+									<StatHelpText
+										alignSelf='flex-end'
+										justifySelf='flex-end'
+										m='0px'
+										color='red.400'
+										fontWeight='bold'
+										fontSize='38px'
+										fontSize='md'>
+										Anomaly Detected &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM Usage : {snmpData.ram_usage}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;           CPU Usage : {snmpData.cpu_usage}
 									</StatHelpText>
+								    )}
+									
+
 								</Flex>
 							</Stat>
 							<IconBox as='box' h={'45px'} w={'45px'} bg='brand.200'>
@@ -117,96 +131,7 @@ function Dashboard() {
 					</CardBody>
 				</Card>
 				{/* MiniStatistics Card */}
-				<Card minH='83px'>
-					<CardBody>
-						<Flex flexDirection='row' align='center' justify='center' w='100%'>
-							<Stat me='auto'>
-								<StatLabel fontSize='sm' color='gray.400' fontWeight='bold' pb='2px'>
-									Today's Users
-								</StatLabel>
-								<Flex>
-									<StatNumber fontSize='lg' color='#fff'>
-										2,300
-									</StatNumber>
-									<StatHelpText
-										alignSelf='flex-end'
-										justifySelf='flex-end'
-										m='0px'
-										color='green.400'
-										fontWeight='bold'
-										ps='3px'
-										fontSize='md'>
-										+5%
-									</StatHelpText>
-								</Flex>
-							</Stat>
-							<IconBox as='box' h={'45px'} w={'45px'} bg='brand.200'>
-								<GlobeIcon h={'24px'} w={'24px'} color='#fff' />
-							</IconBox>
-						</Flex>
-					</CardBody>
-				</Card>
-				{/* MiniStatistics Card */}
-				<Card>
-					<CardBody>
-						<Flex flexDirection='row' align='center' justify='center' w='100%'>
-							<Stat>
-								<StatLabel fontSize='sm' color='gray.400' fontWeight='bold' pb='2px'>
-									New Clients
-								</StatLabel>
-								<Flex>
-									<StatNumber fontSize='lg' color='#fff'>
-										+3,020
-									</StatNumber>
-									<StatHelpText
-										alignSelf='flex-end'
-										justifySelf='flex-end'
-										m='0px'
-										color='red.500'
-										fontWeight='bold'
-										ps='3px'
-										fontSize='md'>
-										-14%
-									</StatHelpText>
-								</Flex>
-							</Stat>
-							<Spacer />
-							<IconBox as='box' h={'45px'} w={'45px'} bg='brand.200'>
-								<DocumentIcon h={'24px'} w={'24px'} color='#fff' />
-							</IconBox>
-						</Flex>
-					</CardBody>
-				</Card>
-				{/* MiniStatistics Card */}
-				<Card>
-					<CardBody>
-						<Flex flexDirection='row' align='center' justify='center' w='100%'>
-							<Stat me='auto'>
-								<StatLabel fontSize='sm' color='gray.400' fontWeight='bold' pb='2px'>
-									Total Sales
-								</StatLabel>
-								<Flex>
-									<StatNumber fontSize='lg' color='#fff' fontWeight='bold'>
-										$173,000
-									</StatNumber>
-									<StatHelpText
-										alignSelf='flex-end'
-										justifySelf='flex-end'
-										m='0px'
-										color='green.400'
-										fontWeight='bold'
-										ps='3px'
-										fontSize='md'>
-										+8%
-									</StatHelpText>
-								</Flex>
-							</Stat>
-							<IconBox as='box' h={'45px'} w={'45px'} bg='brand.200'>
-								<CartIcon h={'24px'} w={'24px'} color='#fff' />
-							</IconBox>
-						</Flex>
-					</CardBody>
-				</Card>
+				
 			</SimpleGrid>
 			<Grid templateColumns={{ sm: '1fr', md: '1fr 1fr ', '2xl': '2fr 1.3fr 1.3fr' }} my='26px' gap='18px'>
 				{/* Welcome Card */}
@@ -223,7 +148,7 @@ function Dashboard() {
 									Welcome back,
 								</Text>
 								<Text fontSize='28px' color='#fff' fontWeight='bold' mb='18px'>
-									Thomas
+									Thomas & Tech team
 								</Text>
 								<Text fontSize='md' color='gray.400' fontWeight='normal' mb='auto'>
 									Glad to see you again! <br />
@@ -437,15 +362,15 @@ function Dashboard() {
 					<CardHeader mb='32px'>
 						<Flex direction='column'>
 							<Text fontSize='lg' color='#fff' fontWeight='bold' mb='6px'>
-								Orders overview
+								Future Questions Coverage
 							</Text>
 							<Flex align='center'>
 								<Icon as={AiFillCheckCircle} color='green.500' w='15px' h='15px' me='5px' />
 								<Text fontSize='sm' color='gray.400' fontWeight='normal'>
 									<Text fontWeight='bold' as='span' color='gray.400'>
-										+30%
+	                                +91%
 									</Text>{' '}
-									this month
+									AI Accuracy
 								</Text>
 							</Flex>
 						</Flex>
