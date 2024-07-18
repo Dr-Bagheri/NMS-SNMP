@@ -2,7 +2,7 @@ from sklearn.preprocessing import StandardScaler
 import pandas as pd
 
 
-df_anomalous = pd.read_csv('anomalous_snmp_data_temporal.csv')
+df_anomalous = pd.read_csv('anomalous_snmp_data.csv')
 
 
 features = [
@@ -41,6 +41,6 @@ validation_data['label'] = y_validation.values
 test_data = pd.DataFrame(X_test_scaled, columns=features)
 test_data['label'] = y_test.values
 
-train_data.to_csv('train_data_temporal.csv', index=False)
-validation_data.to_csv('validation_data_temporal.csv', index=False)
-test_data.to_csv('test_data_temporal.csv', index=False)
+train_data.to_csv('train_data.csv', index=False)
+validation_data.to_csv('validation_data.csv', index=False)
+test_data.to_csv('test_data.csv', index=False)
