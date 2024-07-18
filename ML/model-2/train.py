@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Input, Dense, LayerNormalization, Dropout, MultiHeadAttention, Conv1D, GlobalAveragePooling1D, Add, Embedding, Bidirectional, LSTM, Flatten
+from tensorflow.keras.layers import Input, Dense, LayerNormalization, Dropout, MultiHeadAttention, Conv1D, GlobalAveragePooling1D, Add, Embedding, Bidirectional, LSTM, Flatten, Concatenate
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.utils import to_categorical
 
@@ -60,6 +60,21 @@ def conformer_block(inputs, num_heads, ff_dim, conv_kernel_size=32, dropout=0.1)
     z = Dropout(dropout)(z)
     return Add()([y, z])
 
+# Define the Transformer Encoder block
+def transformer_encoder(inputs, head_size, num_heads, ff_dim, dropout=0.1):
+    # Normalization and Attention
+    x = LayerNormalization(epsilon=1e-6)(inputs)
+    x = MultiHeadAttention(key_dim=head_size, num_heads=num_heads, dropout=dropout)(x, x)
+    x = Dropout(dropout)(x)
+    res = x + inputs
+
+    # Feed Forward Part
+    x = LayerNormalization(epsilon=1e-6)(res)
+    x = Dense(ff_dim, activation="relu")(x)
+    x = Dropout(dropout)(x)
+    x = Dense(inputs.shape[-1])(x)
+    return x + res
+
 # Define the hybrid model
 input_shape = (timesteps, X_train.shape[1])
 inputs = Input(shape=input_shape)
@@ -68,14 +83,20 @@ inputs = Input(shape=input_shape)
 x = Dense(128, activation='relu')(inputs)
 
 # Bi-LSTM layer
-x = Bidirectional(LSTM(64, return_sequences=True, recurrent_dropout=0.2))(x)
+lstm_out = Bidirectional(LSTM(64, return_sequences=True, recurrent_dropout=0.2))(x)
 
 # Conformer block
-x = conformer_block(x, num_heads=4, ff_dim=64)
+conformer_out = conformer_block(lstm_out, num_heads=4, ff_dim=64)
+
+# Transformer Encoder block
+transformer_out = transformer_encoder(conformer_out, head_size=64, num_heads=4, ff_dim=64)
+
+# Concatenate outputs
+concat_out = Concatenate()([lstm_out, conformer_out, transformer_out])
 
 # Flatten and output layer
-x = Flatten()(x)
-x = Dense(50, activation='relu')(x)
+x = Flatten()(concat_out)
+x = Dense(100, activation='relu')(x)
 x = Dropout(0.1)(x)
 outputs = Dense(y_train_categorical.shape[1], activation='softmax')(x)
 
@@ -88,8 +109,8 @@ model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['ac
 # Train the model
 history = model.fit(
     X_train_reshaped, y_train_categorical,
-    epochs=50,
-    batch_size=32,
+    epochs=100,
+    batch_size=64,
     validation_data=(X_validation_reshaped, y_validation_categorical),
     verbose=1
 )
@@ -99,4 +120,4 @@ test_loss, test_accuracy = model.evaluate(X_test_reshaped, y_test_categorical, v
 print(f'Test Accuracy: {test_accuracy:.4f}')
 
 # Save the model
-model.save('bilstm_conformer_anomaly_detection_model.h5')
+model.save('super_hybrid_anomaly_detection_model.h5')
