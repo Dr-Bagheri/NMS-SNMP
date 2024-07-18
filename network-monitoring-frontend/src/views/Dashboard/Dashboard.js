@@ -97,7 +97,7 @@ function Dashboard() {
 								</StatLabel>
 								<Flex>
 									
-									{snmpData.anomaly === 0 ? (	
+									{snmpData.predicted_label === 0 ? (	
 									<StatHelpText
 										alignSelf='flex-end'
 										justifySelf='flex-end'
@@ -106,7 +106,7 @@ function Dashboard() {
 										fontSize='30px'
 										fontWeight='bold'
 										fontSize='md'>
-										NO Anomaly Detected &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM Usage : {snmpData.ram_usage}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            CPU Usage : {snmpData.cpu_usage}
+										NO Anomaly Detected &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anomaly type : Normal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM Usage : {snmpData.hrStorageUsed.toFixed(2)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;            CPU Usage : {snmpData.hrProcessorLoad.toFixed(2)}
 									</StatHelpText> 
                                     ) : (
 									<StatHelpText
@@ -117,7 +117,7 @@ function Dashboard() {
 										fontWeight='bold'
 										fontSize='38px'
 										fontSize='md'>
-										Anomaly Detected &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM Usage : {snmpData.ram_usage}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;           CPU Usage : {snmpData.cpu_usage}
+										Anomaly Detected &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anomaly type : {snmpData.anomaly_type}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RAM Usage : {snmpData.hrStorageUsed.toFixed(2)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;           CPU Usage : {snmpData.hrProcessorLoad.toFixed(2)}
 									</StatHelpText>
 								    )}
 									
@@ -204,7 +204,7 @@ function Dashboard() {
 						<Box zIndex='-1'>
 							<CircularProgress
 								size={200}
-								value={snmpData.ram_usage}
+								value={snmpData.hrStorageUsed.toFixed(2)}
 								thickness={6}
 								color='#582CFF'
 								variant='vision'
@@ -232,7 +232,7 @@ function Dashboard() {
 							</Text>
 							<Flex direction='column' align='center' minW='80px'>
 								<Text color='#fff' fontSize='28px' fontWeight='bold'>
-									{snmpData.ram_usage}%
+									{snmpData.hrStorageUsed.toFixed(2)}%
 								</Text>
 								<Text fontSize='xs' color='gray.400'>
 									Based on SNMP data
@@ -259,7 +259,7 @@ function Dashboard() {
 						<Box zIndex='-1'>
 							<CircularProgress
 								size={200}
-								value={snmpData.cpu_usage}
+								value={snmpData.hrProcessorLoad.toFixed(2)}
 								thickness={6}
 								color='#582CFF'
 								variant='vision'
@@ -287,7 +287,7 @@ function Dashboard() {
 							</Text>
 							<Flex direction='column' align='center' minW='80px'>
 								<Text color='#fff' fontSize='28px' fontWeight='bold'>
-							 	{snmpData.cpu_usage}%
+							 	{snmpData.hrProcessorLoad.toFixed(2)}%
 								</Text>
 								<Text fontSize='xs' color='gray.400'>
 									Based on SNMP data

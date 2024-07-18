@@ -12,7 +12,7 @@ class NetworkDataConfig(AppConfig):
             self.collector_thread.start()
 
     def start_snmp_collector(self):
-        from network_data.snmp_collector import collect_snmp_data
+        from network_data.snmp_collector import run_anomaly_detection
         while True:
-            collect_snmp_data()
+            run_anomaly_detection()
             time.sleep(1)  # Ensures it runs approximately every second

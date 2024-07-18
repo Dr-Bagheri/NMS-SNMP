@@ -1,18 +1,28 @@
 from django.db import models
 
-
 class DeviceData(models.Model):
-    timestamp = models.DateTimeField(auto_now_add=True)  # Automatically set the timestamp on record creation
-    device_name = models.CharField(max_length=255)
-    cpu_usage = models.FloatField()
-    ram_usage = models.FloatField()
-    #device_ip = models.BigIntegerField()  
-    #device_id = models.IntegerField()  
-    class Meta:
-        # This orders the data by 'timestamp' descending, so newest entries first
-        ordering = ['-timestamp']
+    timestamp = models.DateTimeField()
+    ifInOctets = models.FloatField()
+    ifOutOctets = models.FloatField()
+    ipInReceives = models.FloatField()
+    ipOutRequests = models.FloatField()
+    tcpInSegs = models.FloatField()
+    tcpOutSegs = models.FloatField()
+    udpInDatagrams = models.FloatField()
+    udpOutDatagrams = models.FloatField()
+    ifInDiscards = models.FloatField()
+    ifOutDiscards = models.FloatField()
+    ifInErrors = models.FloatField()
+    ifOutErrors = models.FloatField()
+    ifSpeed = models.FloatField()
+    sysUpTime = models.FloatField()
+    ifOperStatus = models.IntegerField()
+    ifLastChange = models.FloatField()
+    hrProcessorLoad = models.FloatField()
+    hrMemorySize = models.FloatField()
+    hrStorageUsed = models.FloatField()
+    anomaly_type = models.CharField(max_length=50)
+    predicted_label = models.IntegerField()
 
-class Post(models.Model):
-    
-    title = models.CharField(max_length=255)
-    content = models.TextField()
+    def __str__(self):
+        return f"Device Data at {self.timestamp}"

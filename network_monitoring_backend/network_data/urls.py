@@ -1,8 +1,6 @@
 from django.urls import path
-from . import views  
-from .views import delete_post
+from . import views
 
 urlpatterns = [
-    path('api/data/', views.device_data, name='device_data'),  
-    path('post/delete/<int:post_id>/', delete_post, name='delete_post'),
+    path('api/data/', views.receive_snmp_data, name='receive_snmp_data'),
 ]
