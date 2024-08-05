@@ -60,3 +60,4 @@ data['anomaly'] = data.apply(label_anomalies, axis=1)
 
 
 data.to_csv('mock_cpu_ram_usage.csv', index=False)
+#test
