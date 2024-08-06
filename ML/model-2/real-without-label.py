@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 
-df_anomalous = pd.read_csv('anomalous_snmp_data.csv')
+df_anomalous = pd.read_csv('anomalous_snmp_data_new.csv')
 
 
 
@@ -56,4 +56,4 @@ df_anomalous = df_anomalous.drop(columns=[label_column])
 
 
 
-df_anomalous.to_csv('realistic.csv', index=False)
+df_anomalous.to_csv('realistic_new.csv', index=False)

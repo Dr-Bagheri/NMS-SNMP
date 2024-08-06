@@ -30,4 +30,4 @@ data = {
 
 
 df_normal = pd.DataFrame(data)
-df_normal.to_csv('normal_snmp_data.csv', index=False)
+df_normal.to_csv('normal_snmp_data_new.csv', index=False)

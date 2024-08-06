@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-df_anomalous = pd.read_csv('anomalous_snmp_data.csv')
+df_anomalous = pd.read_csv('anomalous_snmp_data_new.csv')
 
 
 
@@ -15,7 +15,7 @@ def introduce_gradual_change(data, change_factor=0.05):
     gradual_change = np.linspace(1, 1 + change_factor, num=len(data))
     return data * gradual_change
 
-#combine multiple features to create complex anomalies
+#combine multiple features
 def combine_features(data, columns, weight=0.5):
     combined = data[columns[0]] * weight + data[columns[1]] * (1 - weight)
     return combined
@@ -54,4 +54,4 @@ for column in df_anomalous.columns:
 
 
 
-df_anomalous.to_csv('realistic-with-label.csv', index=False)
+df_anomalous.to_csv('realistic-with-label_new.csv', index=False)

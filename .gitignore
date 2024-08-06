@@ -1,7 +1,11 @@
 /ML/model-2/anomalous_snmp_data.csv
+/ML/model-2/anomalous_snmp_data_new.csv
 /ML/model-2/normal_snmp_data.csv
+/ML/model-2/normal_snmp_data_new.csv
 /ML/model-2/train_data.csv
 /ML/model-2/validation_data.csv
 /ML/model-2/test_data.csv
 /ML/model-2/realistic.csv
+/ML/model-2/realistic_new.csv
 /ML/model-2/realistic-with-label.csv
+/ML/model-2/realistic-with-label_new.csv
