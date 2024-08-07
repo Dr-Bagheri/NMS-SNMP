@@ -26,7 +26,7 @@ df_unlabeled_scaled = scaler.transform(df_unlabeled)
 
 #define the autoencoder model
 input_dim = df_labeled_scaled.shape[1]
-encoding_dim = 14  #number of neurons in the encoding layer
+encoding_dim = 14  # Number of neurons in the encoding layer
 
 input_layer = Input(shape=(input_dim,))
 encoder = Dense(encoding_dim, activation="relu")(input_layer)
@@ -56,11 +56,11 @@ binary_labels = labels.apply(lambda x: 1 if x in ['ddos', 'congestion', 'hardwar
 
 #visualize the results
 plt.figure(figsize=(10, 6))
-plt.plot(reconstruction_errors, label='Reconstruction Errors')
+plt.scatter(range(len(reconstruction_errors)), reconstruction_errors, c=anomalies, cmap='coolwarm', alpha=0.6, marker='o')
 plt.axhline(y=threshold, color='r', linestyle='--', label='Anomaly Threshold')
 plt.title('Autoencoder Anomaly Detection')
-plt.xlabel('Time')
-plt.ylabel('Error')
+plt.xlabel('Data Point Index')
+plt.ylabel('Reconstruction Error')
 plt.legend()
 plt.savefig('autoencoder_anomaly_detection.png')
 
