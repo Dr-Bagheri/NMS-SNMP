@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
+from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
@@ -30,6 +31,12 @@ pca = PCA(n_components=2)
 pca_components = pca.fit_transform(df_unlabeled.drop(columns=['anomaly_dbscan']))
 df_unlabeled['pca1'] = pca_components[:, 0]
 df_unlabeled['pca2'] = pca_components[:, 1]
+
+print("\nDBSCAN Results:")
+print(classification_report(binary_labels, df_unlabeled['anomaly_dbscan'].apply(lambda x: 1 if x == -1 else 0)))
+print(confusion_matrix(binary_labels, df_unlabeled['anomaly_dbscan'].apply(lambda x: 1 if x == -1 else 0)))
+
+
 
 plt.figure(figsize=(10, 6))
 plt.scatter(df_unlabeled['pca1'], df_unlabeled['pca2'], c=df_unlabeled['anomaly_dbscan'], cmap='coolwarm', alpha=0.6)
